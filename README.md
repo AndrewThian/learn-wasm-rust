@@ -1,6 +1,7 @@
 ## Introduction ##
 
-Learning repo for using how to use `rust` with web-assembly and javascript
+Learning repo for using how to use `rust` with web-assembly and javascript.
+I'm following on the free course on [egghead.io](https://egghead.io/lessons/javascript-setup-rust-for-webassembly).
 
 ## Installation ##
 
@@ -37,3 +38,27 @@ Learning repo for using how to use `rust` with web-assembly and javascript
     > $ `cargo install wasm-gc`
 
     For the first few tutorials, we will be using a tool called `wasm-gc`. `wasm-gc` is a tool that removes all unneeded exports, imports, functions and etc from a web-assembly module.
+
+7. web-server:
+
+    > $ `cargo install https`
+
+    we need a web server, so we installed it with cargo's http crate. It's a web server that serves static content from the current directory, we could have used any other web-server. Maybe even `webpack-dev-server`?
+
+## Lessons ##
+
+Now that we've installed a whole bunch of stuff, I guess we're ready to go with the course itself. Summary of what we've installed:
+
+> 1. Rust with `rustup-init`
+> 
+> 2. set up Rust to use a `nightly` build
+> 
+> 3. tell Rust to target web-assembly
+>
+> 4. Rust's package manager to install `wasm-pack` and `wasm-gc`(just for the first few lessons).
+>
+> 5. Rust's https package to serve static content
+
+---
+
+### 1. Load a web-assembly function written in Rust and invoke from Javascript ###
