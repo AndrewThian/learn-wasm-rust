@@ -45,7 +45,7 @@ I'm following on the free course on [egghead.io](https://egghead.io/lessons/java
 
     we need a web server, so we installed it with cargo's http crate. It's a web server that serves static content from the current directory, we could have used any other web-server. Maybe even `webpack-dev-server`?
 
-## Lessons ##
+## Summary ##
 
 Now that we've installed a whole bunch of stuff, I guess we're ready to go with the course itself. Summary of what we've installed:
 
@@ -61,4 +61,78 @@ Now that we've installed a whole bunch of stuff, I guess we're ready to go with 
 
 ---
 
+## Lessons ##
+
 ### 1. Load a web-assembly function written in Rust and invoke from Javascript ###
+
+First we want to create a Rust library with the `cargo` package manager:
+
+> $ `cargo new --lib utils`
+
+Then we have to change the crate type to `cdylib` in Cargo.toml. This has an impact on how things are linked together during compilation.
+
+```toml
+[lib]
+crate-type = ["cdylib"]
+```
+
+Now we can write some Rust code!
+
+```rust
+// [extern] keywork 
+// is needed to create an interface so that this function 
+// can be invoked from other languages
+// -------
+// [no_mangle] annotation 
+// to tell the rust compiler not to mangle the name of this function
+#[no_mangle]
+pub extern fn add_one(x: u32) -> u32 {
+    x + 1
+}
+```
+
+After we've written our super fast rust implementation of a counter, lets build the application and target `wasm32-unknown-unknown`. Which will dump the built files into the `project-root/target/*` directory.
+
+> $ `cargo build --target wasm32-unknown-unknown --release`
+
+Next, use `wasm-gc`(which is not recommended, only for demonstration purposes) to build our wasm file
+
+> $ `wasm-gc target/wasm32-unknown/release/utils.wasm -o utils.gc.wasm`
+
+There are two ways of interacting with web-assembly code, `instantiateStreaming` directly or fetch and then instantiate a buffer.
+
+1. fetching and instantiating a web-assembly module:
+
+    ```js
+    <script>
+        fetch("utils.gc.wasm")
+            .then(response => response.arrayBuffer())
+            // WebAssembly.instantiate takes in arrayBuffer
+            // https://developer.mozilla.org/en-US/docs/WebAssembly/Using_the_JavaScript_API
+            .then(buffer => WebAssembly.instantiate(result))
+            .then(wasmModule => {
+                const result = wasmModel.instance.exports.add_one(2)
+                const text = document.createTextNode(result);
+                document.body.appendChild(text);
+            })
+    </script>
+    ```
+
+2. `InstantiateStreaming`:
+
+    ```js
+    <script>
+        WebAssembly.instantiateStreaming(fetch("utils.gc.wasm"))
+            .then(module => {
+                const result = module.instance.exports.add_one(3);
+                const text = document.createTextNode(result)
+                document.body.appendChild(text);
+            })
+    </script>
+    ```
+
+    > This way we can stream, compile and instantiate a web-assembly module in one go. This can speed up the time to execution a lot especially on slow connections.
+
+---
+
+### 2. Pass a javascript function to WebAssembly and invoke from Rust ###
