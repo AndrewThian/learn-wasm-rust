@@ -2,6 +2,8 @@
 
 web-assembly programs operate on a limited set of value types. Due to this, the functions bridging between js and rust only allow for primitive numeric types(integer and floats)
 
+lesson: [5](https://egghead.io/lessons/webpack-set-up-wasm-bindgen-for-easy-rust-javascript-interoperability)
+
 ```html
 <script>
     const appendStringToBody = string => {

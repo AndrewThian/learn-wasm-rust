@@ -237,3 +237,7 @@ Contents:
     2. [rust-webpack-template](2_rust-webpack-template.md)
 
     Using the `rust-webpack` template provided to us by the Rust/WebAssembly team and how to implement it.
+
+    3. [debug-wasm-module](3_debug-wasm-module)
+
+    Writing a custom Rust macro to log anything from javascript.

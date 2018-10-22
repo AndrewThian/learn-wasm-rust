@@ -2,6 +2,8 @@
 
 While previously we've set up our own webpack project to handle rust and wasm, the Rust WebAssembly team also ships a template for it. All we have to do is npm run the template and install the deps.
 
+lesson: [6](https://egghead.io/lessons/webpack-create-a-new-rust-webpack-project-using-the-rust-webpack-template)
+
 > $ `npm init rust-webpack`
 >
 > $ `npm install`
