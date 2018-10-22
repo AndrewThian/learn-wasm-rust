@@ -103,7 +103,7 @@ There are two ways of interacting with web-assembly code, `instantiateStreaming`
 
 1. fetching and instantiating a web-assembly module:
 
-    ```js
+    ```html
     <script>
         fetch("utils.gc.wasm")
             .then(response => response.arrayBuffer())
@@ -120,7 +120,7 @@ There are two ways of interacting with web-assembly code, `instantiateStreaming`
 
 2. `InstantiateStreaming`:
 
-    ```js
+    ```html
     <script>
         WebAssembly.instantiateStreaming(fetch("utils.gc.wasm"))
             .then(module => {
@@ -136,3 +136,90 @@ There are two ways of interacting with web-assembly code, `instantiateStreaming`
 ---
 
 ### 2. Pass a javascript function to WebAssembly and invoke from Rust ###
+
+Some cases, it's useful to be able to invoke Javascript functions inside of Rust. Basically, we want to export a function from javascript, import it into rust and then instantiate the stream from web-assembly.
+
+First we want to define a function in an object in our javascript
+
+```html
+<script>
+    const appendNumberToBody = number => {
+        const text = document.createTextNode(number)
+        document.body.appendChild(text)
+    }
+
+    const importObject = {
+        appendNumberToBody: appendNumberToBody
+    }
+</script>
+```
+
+let's write our rust code to accept the javascript object we've imported.
+
+```rust
+extern {
+    fn appendNumberToBody(x: u32);
+}
+
+#[no_mangle]
+pub extern fn run() {
+    // wrapping in an unsafe block
+    // rust compiler can't provide mem safety for external functions
+    unsafe {
+        appendNumberToBody(42);
+    }
+}
+```
+
+finally, we can instantiate the web-assembly module in our javascript on our `index.html`, the same way we've done so before.
+
+```html
+<script>
+    // ... previous code obmitted for ease of reading
+
+    WebAssembly
+        .instantiateStreaming(fetch("utils.gc.wasm"), importObject)
+        .then(wasmModule => {
+                console.log(wasmModule)
+                wasmModule.instance.exports.run()
+            })
+</script>
+```
+
+Next add one more, we're gonna pass in a **native** function into the module
+
+```html
+<script>
+    // ... previous code obmitted for ease of reading
+
+    const importObject = {
+        env: {
+            appendNumberToBody: appendNumberToBody,
+            alert: alert
+        }
+    }
+
+    // ... previous code obmitted for ease of reading
+</script>
+```
+
+then, import the function into our rust code and import our unsafe block. Don't forget to recompile with `cargo build` and `wasm-gc`.
+
+```rust
+extern {
+    fn appendNumberToBody(x: u32);
+    fn alert(x: u32);
+}
+
+#[no_mangle]
+pub extern fn run() {
+    // wrapping in an unsafe block
+    // rust compiler can't provide mem safety for external functions
+    unsafe {
+        appendNumberToBody(42);
+        alert(4);
+    }
+}
+```
+
+Whew! We've just gotten through the introductory lessons for working with `Rust`, `WebAssembly` and browser javascript!
