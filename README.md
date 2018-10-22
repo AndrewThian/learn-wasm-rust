@@ -241,3 +241,7 @@ Contents:
     3. [debug-wasm-module](3_debug-wasm-module)
 
     Writing a custom Rust macro to log anything from javascript.
+
+    4 [accessing-mem-js.md](4_accessing-mem-js.md)
+
+    How to read-write memory in our WebAssembly modules directly from javascript. By leveraging the `Uint8Array` method in javascript and writing our Rust structs into `u8`(unsigned-int-8) data type.
