@@ -223,3 +223,17 @@ pub extern fn run() {
 ```
 
 Whew! We've just gotten through the introductory lessons for working with `Rust`, `WebAssembly` and browser javascript!
+
+---
+
+## Further lessons ##
+
+Contents:
+
+    1. [wasm-js-interop](1_wasm-js-interop.md)
+
+    Deeper dive into `wasm-bindgen`, the backend to `wasm-pack` build/compile layer. As well as, implementing webpack to bundle and serve our wasm modules.
+
+    2. [rust-webpack-template](2_rust-webpack-template.md)
+
+    Using the `rust-webpack` template provided to us by the Rust/WebAssembly team and how to implement it.
