@@ -245,3 +245,13 @@ Contents:
     4 [accessing-mem-js.md](4_accessing-mem-js.md)
 
     How to read-write memory in our WebAssembly modules directly from javascript. By leveraging the `Uint8Array` method in javascript and writing our Rust structs into `u8`(unsigned-int-8) data type.
+
+    5 [js-sys-global-api](5_js-sys-global-api.md)
+
+    We'll be using the `js-sys` dependency in our `Cargo.toml` to expose global APIs from any javascript environment.
+
+---
+
+## Conclusion ##
+
+I obmitted lessons 10 and 11 because it's not very important at this point. For 11, nodejs modules are not actually production ready and still experimental.
